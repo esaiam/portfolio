@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sergey — AI Systems Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0D0F14;
+    --bg2:       #12151C;
+    --bg3:       #181C26;
+    --teal:      #5A9E9A;
+    --teal-dim:  #3D6F6C;
+    --gold:      #C9A84C;
+    --gold-dim:  #8A6E2F;
+    --text:      #E8EAF0;
+    --text-muted:#8890A4;
+    --border:    rgba(90,158,154,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 20px 0;
+    background: rgba(13,15,20,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+  }
+  nav .container { display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--teal);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 160px 0 100px;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--teal);
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(38px, 6vw, 64px);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+  }
+
+  .accent-teal { color: var(--teal); }
+  .accent-gold { color: var(--gold); }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    background: var(--teal);
+    color: var(--bg);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: #6BB5B1; transform: translateY(-1px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-secondary:hover { color: var(--text); border-color: var(--teal-dim); }
+
+  /* ── SIGNAL STRIP ── */
+  .signal-strip {
+    margin-top: 72px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .signal-item {}
+  .signal-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .signal-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── SECTION ── */
+  section { padding: 80px 0; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--teal);
+  }
+
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    line-height: 1.15;
+  }
+
+  /* ── PROJECTS ── */
+  .project-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .project-card:hover { border-color: var(--teal-dim); }
+  .project-card:hover::before { opacity: 1; }
+
+  .project-card.gold-accent::before {
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .project-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 16px;
+  }
+
+  .project-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .project-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-teal { background: rgba(90,158,154,0.15); color: var(--teal); }
+  .badge-gold { background: rgba(201,168,76,0.15); color: var(--gold); }
+
+  .project-desc {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .feature-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 24px;
+    margin-bottom: 28px;
+  }
+  .feature-list li {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+  .feature-list li::before {
+    content: '→';
+    color: var(--teal);
+    flex-shrink: 0;
+    font-size: 12px;
+    margin-top: 1px;
+  }
+
+  .tech-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tech-tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 4px;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── SERVICES ── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .service-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px 36px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 24px;
+    transition: border-color 0.25s;
+  }
+  .service-card:hover { border-color: var(--teal-dim); }
+
+  .service-tier {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+
+  .service-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .service-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+
+  .service-includes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .service-includes li {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .service-includes li::before {
+    content: '✓';
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .service-price {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .price-amount {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .price-note {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .about-text {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+  .about-text p + p { margin-top: 16px; }
+
+  .skills-block {}
+  .skill-group { margin-bottom: 24px; }
+  .skill-group-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .skill-tag {
+    font-size: 12px;
+    padding: 5px 11px;
+    background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 4px;
+    color: var(--text-muted);
+  }
+
+  /* ── CONTACT ── */
+  .contact-section {
+    padding: 80px 0 100px;
+    border-top: 1px solid var(--border);
+  }
+
+  .contact-inner {
+    text-align: center;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .contact-inner h2 { margin-bottom: 16px; }
+
+  .contact-inner p {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    line-height: 1.7;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 28px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── GLOW ORBS ── */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-teal {
+    width: 400px; height: 400px;
+    background: rgba(90,158,154,0.07);
+    top: -100px; right: -100px;
+  }
+  .orb-gold {
+    width: 300px; height: 300px;
+    background: rgba(201,168,76,0.05);
+    bottom: 0; left: -80px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .signal-strip { grid-template-columns: 1fr 1fr; }
+    .feature-list { grid-template-columns: 1fr; }
+    .service-card { grid-template-columns: 1fr; }
+    .service-price { text-align: left; }
+    .about-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .project-card { padding: 28px 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <a class="nav-logo" href="#">S · Dev</a>
+    <div class="nav-links">
+      <a href="#projects">Проекты</a>
+      <a href="#services">Услуги</a>
+      <a href="#about">О себе</a>
+      <a href="#contact">Контакт</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="orb orb-teal"></div>
+  <div class="orb orb-gold"></div>
+  <div class="container">
+    <div class="hero-eyebrow">AI Systems Developer</div>
+    <h1>
+      Строю AI-системы<br>
+      которые <span class="accent-teal">помнят</span><br>
+      и <span class="accent-gold">думают</span>
+    </h1>
+    <p class="hero-sub">
+      Не ChatGPT-обёртки — полноценные когнитивные бэкенды с долгосрочной памятью, 
+      многоагентной архитектурой и интеграцией в ваш продукт.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Обсудить проект →</a>
+      <a href="#projects" class="btn-secondary">Посмотреть работы</a>
+    </div>
+
+    <div class="signal-strip">
+      <div class="signal-item">
+        <div class="signal-num">20+</div>
+        <div class="signal-label">AI-агентов в продакшн-системе</div>
+      </div>
+      <div class="signal-item">
+        <div class="signal-num">700+</div>
+        <div class="signal-label">тестов в кодовой базе</div>
+      </div>
+      <div class="signal-item">
+        <div class="signal-num">2</div>
+        <div class="signal-label">production-продукта с нуля</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="section-label">Проекты</div>
+
+    <!-- ARIA -->
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-name accent-teal">Aria</div>
+        <span class="project-badge badge-teal">AI Backend</span>
+      </div>
+      <p class="project-desc">
+        Когнитивный AI-ассистент с долгосрочной памятью, многоагентной архитектурой и 
+        learning spine. Система не просто отвечает — она строит модель пользователя, 
+        отслеживает цели, инициирует разговор и обучается на обратной связи.
+      </p>
+      <ul class="feature-list">
+        <li>Многоуровневая память: векторная (pgvector), граф знаний, сессионная</li>
+        <li>20+ специализированных агентов в пайплайне</li>
+        <li>Hot path (~2с) + Slow path фоновая обработка</li>
+        <li>Goals / Tasks / Habits система с API</li>
+        <li>Автономный веб-ресёрч и proactive messaging</li>
+        <li>Learning spine: поведенческие политики из обратной связи</li>
+        <li>Голосовые сообщения (Groq Whisper)</li>
+        <li>Документы и инфографика (PDF / PNG генерация)</li>
+      </ul>
+      <div class="tech-row">
+        <span class="tech-tag">FastAPI</span>
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">Supabase + pgvector</span>
+        <span class="tech-tag">Groq llama-3.3-70b</span>
+        <span class="tech-tag">Ollama</span>
+        <span class="tech-tag">Tavily</span>
+        <span class="tech-tag">pytest × 700</span>
+      </div>
+    </div>
+
+    <!-- VAULT -->
+    <div class="project-card gold-accent">
+      <div class="project-header">
+        <div class="project-name accent-gold">Vault</div>
+        <span class="project-badge badge-gold">Mobile App</span>
+      </div>
+      <p class="project-desc">
+        E2E-зашифрованный мессенджер на React Native с встроенным AI-ассистентом, 
+        нардами на Three.js и кастомной дизайн-системой. Invite-only архитектура 
+        для аудитории которая ценит приватность.
+      </p>
+      <ul class="feature-list">
+        <li>E2E-шифрование X25519 / libsodium</li>
+        <li>Realtime на Supabase (WebSocket)</li>
+        <li>Голосовые и видео-сообщения</li>
+        <li>Нарды с 3D-кубиками (Three.js / expo-gl)</li>
+        <li>Интеграция Aria прямо в чат</li>
+        <li>Push-уведомления через Supabase Edge Functions</li>
+        <li>Автоудаление эфемерных сообщений (pg_cron)</li>
+        <li>Кастомная lumenmorphism дизайн-система</li>
+      </ul>
+      <div class="tech-row">
+        <span class="tech-tag">React Native</span>
+        <span class="tech-tag">Expo SDK 54</span>
+        <span class="tech-tag">Supabase</span>
+        <span class="tech-tag">Three.js</span>
+        <span class="tech-tag">libsodium</span>
+        <span class="tech-tag">Reanimated 3</span>
+        <span class="tech-tag">EAS Build</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-label">Услуги</div>
+    <h2>Что я делаю для клиентов</h2>
+    <p style="color:var(--text-muted);font-size:15px;margin-bottom:40px;line-height:1.7;">
+      Продаю форки Aria — адаптирую систему под задачи клиента. 
+      Вы получаете production-готовый AI-бэкенд, а не сырой прототип.
+    </p>
+
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div>
+          <div class="service-tier">Базовый</div>
+          <div class="service-name">Ассистент с памятью</div>
+          <p class="service-desc">
+            AI-ассистент который помнит контекст разговора и накапливает знания о пользователе. 
+            Интеграция в Telegram или веб-интерфейс. Деплой на вашем сервере.
+          </p>
+          <ul class="service-includes">
+            <li>Долгосрочная память о пользователе</li>
+            <li>Кастомный характер и инструкции</li>
+            <li>Telegram-бот или REST API</li>
+            <li>Деплой и документация</li>
+          </ul>
+        </div>
+        <div class="service-price">
+          <div class="price-amount">$600</div>
+          <div class="price-note">фиксированная цена</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div>
+          <div class="service-tier">Стандарт</div>
+          <div class="service-name">Умный командный ассистент</div>
+          <p class="service-desc">
+            Полноценный AI-ассистент для команды: база знаний компании, задачи и напоминания, 
+            веб-поиск, proactive сообщения. Несколько пользователей.
+          </p>
+          <ul class="service-includes">
+            <li>Всё из базового</li>
+            <li>База знаний компании (RAG)</li>
+            <li>Задачи, цели, привычки</li>
+            <li>Веб-поиск в реальном времени</li>
+            <li>Proactive messaging</li>
+            <li>Multi-user поддержка</li>
+          </ul>
+        </div>
+        <div class="service-price">
+          <div class="price-amount">$1500</div>
+          <div class="price-note">фиксированная цена</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div>
+          <div class="service-tier">Про</div>
+          <div class="service-name">Когнитивный AI под ключ</div>
+          <p class="service-desc">
+            Полный форк Aria с кастомными агентами под процессы вашего бизнеса. 
+            Интеграции с вашими инструментами. Месяц поддержки включён.
+          </p>
+          <ul class="service-includes">
+            <li>Всё из стандарта</li>
+            <li>Кастомные агенты под ваши процессы</li>
+            <li>Интеграции (CRM, Notion, и др.)</li>
+            <li>Knowledge graph</li>
+            <li>Learning spine (обучение на фидбеке)</li>
+            <li>1 месяц поддержки</li>
+          </ul>
+        </div>
+        <div class="service-price">
+          <div class="price-amount">$3000</div>
+          <div class="price-note">от / обсуждается</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-label">О себе</div>
+    <div class="about-grid">
+      <div>
+        <h2>Разработчик, который строит не MVP — а системы</h2>
+        <div class="about-text">
+          <p>
+            Два года строю собственные продукты — мессенджер и AI-компаньона. 
+            Не учебные проекты, а полноценные системы с шифрованием, тестами, 
+            CI/CD и production-деплоем.
+          </p>
+          <p>
+            Специализируюсь на AI-бэкендах: многоагентные системы, векторная память, 
+            LLM-интеграции. Понимаю не только как подключить API, но как выстроить 
+            архитектуру которая работает и масштабируется.
+          </p>
+          <p>
+            Работаю удалённо. Говорю по-русски и по-английски.
+          </p>
+        </div>
+      </div>
+      <div class="skills-block">
+        <div class="skill-group">
+          <div class="skill-group-label">AI / ML</div>
+          <div class="skill-tags">
+            <span class="skill-tag">LLM Integration</span>
+            <span class="skill-tag">Multi-agent</span>
+            <span class="skill-tag">pgvector RAG</span>
+            <span class="skill-tag">Groq</span>
+            <span class="skill-tag">Ollama</span>
+            <span class="skill-tag">Gemini</span>
+            <span class="skill-tag">Whisper</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-label">Backend</div>
+          <div class="skill-tags">
+            <span class="skill-tag">FastAPI</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Supabase</span>
+            <span class="skill-tag">PostgreSQL</span>
+            <span class="skill-tag">REST / SSE</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-label">Mobile / Frontend</div>
+          <div class="skill-tags">
+            <span class="skill-tag">React Native</span>
+            <span class="skill-tag">Expo</span>
+            <span class="skill-tag">Reanimated</span>
+            <span class="skill-tag">Three.js</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-label">Инфраструктура</div>
+          <div class="skill-tags">
+            <span class="skill-tag">VPS Deploy</span>
+            <span class="skill-tag">Nginx</span>
+            <span class="skill-tag">Cloudflare</span>
+            <span class="skill-tag">EAS Build</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="section-label" style="justify-content:center;">Контакт</div>
+      <h2>Есть задача? Обсудим</h2>
+      <p>
+        Расскажите что хотите сделать — отвечу в течение дня. 
+        Если задача подходит, предложу конкретное решение и цену.
+      </p>
+      <div class="contact-links">
+        <a href="https://t.me/YOUR_USERNAME" class="btn-primary">Написать в Telegram →</a>
+        <a href="mailto:YOUR@EMAIL.COM" class="btn-secondary">Написать на почту</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span style="color:var(--teal)">S · Dev</span> &nbsp;·&nbsp; AI Systems Developer &nbsp;·&nbsp; 2026
+  </div>
+</footer>
+
+</body>
+</html>
